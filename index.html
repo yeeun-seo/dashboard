@@ -87,7 +87,7 @@
   }
   /* 2페이지를 가로로 볼 때: 좌측 현재날씨(크게) / 우측 오전·오후 카드 나란히(위쪽 절반 높이 전체 사용) */
   @media (orientation:landscape){
-    #p2 .top{padding:3vh 4vw 2.5vh}
+    #p2 .top{padding:3vh calc(1.4vw + 68px) 2.5vh 4vw}
     #p2 .wx{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);
       grid-template-rows:auto 1fr auto;column-gap:3vw;row-gap:1vh}
     #p2 .loc{grid-column:1;grid-row:1;font-size:2.8vh}
@@ -113,6 +113,15 @@
   #dots i{width:8px;height:8px;border-radius:50%;background:#333;display:block}
   #dots i.on{background:#bbb}
   #dots.hide{opacity:0}
+
+  /* 새로고침 버튼 */
+  #rf{position:fixed;right:1.4vw;top:1.6vh;width:52px;height:52px;border-radius:50%;
+    background:transparent;border:1.5px solid #555;color:#888;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;z-index:5;touch-action:manipulation}
+  #rf:active{background:#151515;border-color:#aaa;color:#eee}
+  #rf svg{width:24px;height:24px}
+  #rf.spin svg{animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
 
   /* ---------- 설정 ---------- */
   #set{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:9;touch-action:auto}
@@ -145,6 +154,7 @@
 </div>
 <div id="dots"><i></i><i></i></div>
 <div id="wl" title="화면 켜짐 유지"></div>
+<button id="rf" aria-label="새로고침"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg></button>
 
 <div id="set">
   <div class="panel">
@@ -374,6 +384,15 @@
     if (e.target.closest('.loc')){ openSettings(); return; }
     try{ if (!document.fullscreenElement) await document.documentElement.requestFullscreen(); }catch(_){}
     keepAwake();
+  });
+
+  // ---------- 새로고침 버튼: 캐시 무시하고 최신 버전으로 다시 불러오기 ----------
+  $('rf').addEventListener('click', e => {
+    e.stopPropagation();
+    $('rf').classList.add('spin');
+    const u = new URL(location.href);
+    u.searchParams.set('r', Date.now());
+    setTimeout(() => location.replace(u.toString()), 150);
   });
 
   // ---------- 설정 패널 ----------
