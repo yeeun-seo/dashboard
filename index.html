@@ -12,7 +12,23 @@
   :root{
     --bg:#000; --fg:#f2f2f2; --sub:#9a9a9a; --dim:#5a5a5a; --line:rgba(255,255,255,.09);
     --accent:#7fb2ff; --warm:#ffb86b; --card:rgba(0,0,0,.38); --cardline:rgba(255,255,255,.08);
+    --dtext:#b5b5b5; --dropc:180,205,255;
   }
+  /* 낮: 밝은 테마 */
+  body.light{--fg:#17202b; --sub:#45505e; --dim:#7a8593; --line:rgba(20,30,45,.13);
+    --accent:#2a64c4; --warm:#d26d12; --card:rgba(255,255,255,.42); --cardline:rgba(255,255,255,.7);
+    --dtext:#2e3946; --dropc:40,75,130}
+  body{transition:color 2s}
+  body.light .page{text-shadow:0 1px 10px rgba(255,255,255,.35)}
+  body.light #rf{background:rgba(255,255,255,.4);border-color:rgba(0,0,0,.22);color:#334}
+  body.light #dots i{background:rgba(0,0,0,.18)} body.light #dots i.on{background:#333}
+  body.light .wd{border-bottom-color:rgba(0,0,0,.06)}
+  body.light .wd.today{background:rgba(255,255,255,.55)}
+  body.light .wbar{background:rgba(0,0,0,.1)}
+  body.light .dt .dm{border-left-color:rgba(0,0,0,.25)}
+  body.light .dt.sat .dw{color:#2a64c4} body.light .dt.sun .dw{color:#d23b2a}
+  body.light .flake{box-shadow:0 0 3px rgba(60,80,110,.45)}
+  body.light .fogb{background:radial-gradient(closest-side,rgba(255,255,255,.55),rgba(255,255,255,0))}
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%;background:var(--bg);color:var(--fg);overflow:hidden;
     font-family:"Pretendard",-apple-system,"Noto Sans KR",sans-serif;
@@ -32,30 +48,31 @@
     animation:tw var(--d) ease-in-out infinite;animation-delay:var(--dl)}
   @keyframes tw{0%,100%{opacity:.12}50%{opacity:.85}}
   .sunglow{position:absolute;right:-18vw;top:-30vh;width:75vmax;height:75vmax;border-radius:50%;
-    background:radial-gradient(closest-side,rgba(255,190,110,.26),rgba(255,190,110,0));animation:pulse 14s ease-in-out infinite}
+    background:radial-gradient(closest-side,rgba(255,236,170,.55),rgba(255,236,170,0));animation:pulse 14s ease-in-out infinite}
   @keyframes pulse{50%{transform:scale(1.08);opacity:.75}}
-  /* 뭉게구름: 여러 원형 그라데이션을 겹쳐 형태를 만듦 (blur 필터 미사용 → 저사양 부담 최소화) */
-  .cloud{position:absolute;left:0;width:calc(var(--w) * 1vw);height:calc(var(--w) * .42vw);
-    --c:rgba(225,232,240,var(--o)); --c2:rgba(225,232,240,calc(var(--o) * .55));
-    background:
-      radial-gradient(circle calc(var(--w) * .10vw) at 28% 62%, var(--c) 0, var(--c2) 50%, transparent 100%),
-      radial-gradient(circle calc(var(--w) * .14vw) at 47% 40%, var(--c) 0, var(--c2) 50%, transparent 100%),
-      radial-gradient(circle calc(var(--w) * .12vw) at 66% 55%, var(--c) 0, var(--c2) 50%, transparent 100%),
-      radial-gradient(circle calc(var(--w) * .08vw) at 80% 68%, var(--c) 0, var(--c2) 50%, transparent 100%),
-      radial-gradient(ellipse calc(var(--w) * .26vw) calc(var(--w) * .10vw) at 52% 72%, var(--c) 0, var(--c2) 55%, transparent 100%);
-    animation:drift var(--d) linear infinite;animation-delay:var(--dl)}
-  @keyframes drift{from{transform:translateX(-70vw)}to{transform:translateX(110vw)}}
-  .drop{position:absolute;top:-15vh;width:1.5px;height:11vh;rotate:6deg;
-    background:linear-gradient(rgba(170,200,255,0),rgba(170,200,255,.42));
+  /* 구름: 윤곽이 또렷한 SVG 일러스트를 배경 이미지로 사용 (한 번만 그려지고 이동만 하므로 저사양 부담 적음) */
+  .cloud{position:absolute;left:0;width:calc(var(--w) * 1vw);height:calc(var(--w) * .5vw);
+    background:var(--img) center/contain no-repeat;opacity:var(--o);
+    animation:drift var(--d) linear infinite, bob 16s ease-in-out infinite;animation-delay:var(--dl),var(--dl)}
+  @keyframes drift{from{transform:translateX(-95vw)}to{transform:translateX(110vw)}}
+  @keyframes bob{50%{translate:0 1.2vh}}
+  .drop{position:absolute;top:-15vh;width:3px;height:14vh;rotate:6deg;border-radius:2px;
+    background:linear-gradient(rgba(var(--dropc),0),rgba(var(--dropc),.7));
     animation:fall var(--d) linear infinite;animation-delay:var(--dl)}
   @keyframes fall{to{transform:translate(-12vh,130vh)}}
-  .flake{position:absolute;top:-5vh;border-radius:50%;background:rgba(255,255,255,.7);
+  .flake{position:absolute;top:-6vh;border-radius:50%;
+    background:radial-gradient(circle,#fff 0,rgba(255,255,255,.95) 30%,rgba(255,255,255,.55) 60%,rgba(255,255,255,0) 100%);
     animation:snow var(--d) linear infinite;animation-delay:var(--dl)}
-  @keyframes snow{0%{transform:translate(0,0)}50%{transform:translate(3vw,55vh)}100%{transform:translate(-1vw,110vh)}}
+  @keyframes snow{0%{transform:translate(0,0)}25%{transform:translate(3vw,28vh)}50%{transform:translate(-1vw,56vh)}75%{transform:translate(3.5vw,84vh)}100%{transform:translate(0,114vh)}}
   .fogb{position:absolute;left:-50vw;width:200vw;height:34vh;
     background:radial-gradient(closest-side,rgba(210,210,210,.11),rgba(210,210,210,0));
     animation:fogm var(--d) ease-in-out infinite alternate;animation-delay:var(--dl)}
   @keyframes fogm{from{transform:translateX(-12vw)}to{transform:translateX(12vw)}}
+  /* 현재 날씨 자리의 달 (실제 월령) */
+  .moonic{position:relative;flex:none}
+  .moonic svg{width:100%;height:100%;overflow:visible}
+  .moonic .halo{animation:halo 8s ease-in-out infinite;transform-origin:50% 50%}
+  @keyframes halo{50%{opacity:.7;transform:scale(1.03)}}
   /* 별똥별 */
   .shoot{position:absolute;width:16vw;height:1.5px;
     background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.85));
@@ -95,7 +112,7 @@
   .now{display:flex;align-items:center;gap:2vw}
   .now .ic{width:min(13vw,20vh);height:min(13vw,20vh);flex:none}
   .now .t{font-size:min(9vw,17vh);font-weight:200;line-height:1;font-variant-numeric:tabular-nums}
-  .now .d{font-size:clamp(14px,2.6vh,30px);color:#b5b5b5;margin-top:.6vh;line-height:1.45}
+  .now .d{font-size:clamp(14px,2.6vh,30px);color:var(--dtext);margin-top:.6vh;line-height:1.45}
   .periods{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1.5vw}
   .p{border:1px solid var(--cardline);border-radius:18px;padding:2.2vh 1.6vw;display:flex;flex-direction:column;gap:1vh;background:var(--card)}
   .p .h{font-size:clamp(14px,2.4vh,28px);color:var(--sub);font-weight:600;display:flex;justify-content:space-between}
@@ -240,7 +257,7 @@
 </style>
 </head>
 <body>
-<div id="bg"><div id="fx"></div><div id="shade"></div><div id="flash"></div></div>
+<div id="bg"><div id="shade"></div><div id="fx"></div><div id="flash"></div></div>
 
 <div id="track">
   <!-- 1페이지 -->
@@ -376,6 +393,15 @@
     thunder:    { bg:'linear-gradient(180deg,#09080f 0%,#16131f 60%,#211c2e 100%)', fx:'thunder' },
     fog:        { bg:'linear-gradient(180deg,#17191b 0%,#26292c 60%,#33373a 100%)', fx:'fog' }
   };
+  // 낮(밝은 테마) 배경
+  const DAY_BG = {
+    clearDay: 'linear-gradient(180deg,#3f8fe0 0%,#74b4ef 55%,#bfdcf7 100%)',
+    partly:   'linear-gradient(180deg,#5b98d0 0%,#8dbbe3 55%,#c6dcef 100%)',
+    cloudy:   'linear-gradient(180deg,#8994a1 0%,#aab3bd 55%,#ccd2d8 100%)',
+    rain:     'linear-gradient(180deg,#6d7c8b 0%,#8e9aa7 55%,#b3bcc5 100%)',
+    snow:     'linear-gradient(180deg,#a9b7c6 0%,#c9d3dd 55%,#e6ebf0 100%)',
+    fog:      'linear-gradient(180deg,#b9bfc5 0%,#d0d5d9 55%,#e6e9ec 100%)'
+  };
   let curScene = null;
 
   function pickScene(d){
@@ -389,12 +415,55 @@
     return { key: t, night: !isDay };
   }
 
+  // ---------- 달: 월령 계산 + 디자인 ----------
+  // 기준 신월 2000-01-06 18:14 UTC, 삭망월 29.530588853일
+  function moonPhase(t = Date.now()){
+    const days = (t - Date.UTC(2000,0,6,18,14)) / 86400000, L = 29.530588853;
+    return (((days % L) + L) % L) / L;          // 0 신월 · 0.25 상현 · 0.5 보름 · 0.75 하현
+  }
+  // 달: 노란빛의 심플한 형태 (무늬 없음, 실제 월령 모양만 반영)
+  function moonSVG(p){
+    const r = 50, c = 50, k = Math.cos(2*Math.PI*p), rx = Math.abs(k)*r, illum = (1 - k)/2;
+    const waxing = p < 0.5;                       // 북반구: 차오를 때 오른쪽이 밝음
+    const outer = waxing ? 1 : 0, term = waxing ? (k > 0 ? 0 : 1) : (k > 0 ? 1 : 0);
+    const lit = `M${c} ${c-r} A${r} ${r} 0 0 ${outer} ${c} ${c+r} A${rx.toFixed(2)} ${r} 0 0 ${term} ${c} ${c-r}Z`;
+    const g = (.45 + illum*.55).toFixed(2);
+    return `<div class="ic moonic"><svg viewBox="0 0 100 100">
+      <defs>
+        <radialGradient id="mLit" cx="38%" cy="34%" r="78%"><stop offset="0" stop-color="#fff6c4"/><stop offset=".55" stop-color="#ffe183"/><stop offset="1" stop-color="#f5c451"/></radialGradient>
+        <radialGradient id="mGlow1" r="50%"><stop offset=".64" stop-color="#ffd76a" stop-opacity=".40"/><stop offset="1" stop-color="#ffd76a" stop-opacity="0"/></radialGradient>
+        <radialGradient id="mGlow2" r="50%"><stop offset=".3" stop-color="#ffe9a8" stop-opacity=".12"/><stop offset="1" stop-color="#ffe9a8" stop-opacity="0"/></radialGradient>
+      </defs>
+      <circle class="halo" cx="50" cy="50" r="120" fill="url(#mGlow2)" opacity="${g}"/>
+      <circle class="halo" cx="50" cy="50" r="72" fill="url(#mGlow1)" opacity="${g}"/>
+      <circle cx="50" cy="50" r="50" fill="#0d1524" fill-opacity=".5"/>
+      ${illum > 0.02 ? `<path d="${lit}" fill="url(#mLit)"/>` : ''}
+    </svg></div>`;
+  }
+
   const starsHTML = k => { let h=''; for (let i=0;i<k;i++) h += `<i class="star" style="left:${rnd(0,100)}%;top:${rnd(0,70)}%;--d:${rnd(3,7).toFixed(1)}s;--dl:-${rnd(0,7).toFixed(1)}s;${Math.random()<.2?'width:3px;height:3px;':''}"></i>`; return h; };
-  const cloudsHTML = (k, o1, o2, d1, d2) => { let h=''; for (let i=0;i<k;i++){ const d = rnd(d1,d2);
-    h += `<i class="cloud" style="top:${rnd(-6,62).toFixed(1)}%;--w:${rnd(32,58).toFixed(0)};--o:${rnd(o1,o2).toFixed(3)};--d:${d.toFixed(0)}s;--dl:-${rnd(0,d).toFixed(0)}s"></i>`; } return h; };
+  // 구름 모양 3종 (원 여러 개를 합친 실루엣, 위→아래 밝기 그라데이션, 가장자리만 살짝 부드럽게)
+  const CLOUD_SHAPES = [
+    [[48,64,24],[82,46,32],[122,50,30],[154,64,22],[100,70,30],[70,72,22],[132,74,20]],
+    [[40,70,20],[70,54,28],[108,40,34],[146,56,26],[172,70,16],[96,74,26],[132,76,22]],
+    [[30,72,16],[58,62,22],[92,56,24],[128,58,22],[160,66,18],[186,74,12],[110,76,20],[64,78,16]]
+  ];
+  function cloudImg(shape, tone){
+    const top = tone === 'night' ? '#c9d3e2' : '#ffffff', bot = tone === 'night' ? '#6e7b8f' : (tone === 'grey' ? '#9aa6b5' : '#c5d1e0');
+    const circles = CLOUD_SHAPES[shape].map(([x,y,r]) => `<circle cx='${x}' cy='${y}' r='${r}'/>`).join('');
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100'><defs>`
+      + `<linearGradient id='g' gradientUnits='userSpaceOnUse' x1='0' y1='12' x2='0' y2='98'><stop offset='0' stop-color='${top}'/><stop offset='.55' stop-color='${top}' stop-opacity='.92'/><stop offset='1' stop-color='${bot}'/></linearGradient>`
+      + `<filter id='f' x='-10%' y='-10%' width='120%' height='120%'><feGaussianBlur stdDeviation='1.6'/></filter></defs>`
+      + `<g fill='url(#g)' filter='url(#f)'>${circles}<rect x='40' y='66' width='124' height='28' rx='14'/></g></svg>`;
+    return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+  }
+  const cloudsHTML = (k, o1, o2, d1, d2, w1, w2, tone) => { let h=''; for (let i=0;i<k;i++){
+    const d = rnd(d1,d2), back = i % 2 === 0, w = back ? rnd(w1+8, w2+12) : rnd(w1, w2);
+    const o = back ? rnd(o1,o2)*.65 : rnd(o1,o2);
+    h += `<i class="cloud" style="--img:${cloudImg(i%3, tone).replace(/"/g,'&quot;')};top:${rnd(-10,55).toFixed(1)}%;--w:${w.toFixed(0)};--o:${o.toFixed(2)};--d:${(back ? d*1.5 : d).toFixed(0)}s;--dl:-${rnd(0,d).toFixed(0)}s"></i>`; } return h; };
   const shootHTML = () => `<i class="shoot" style="left:70%;top:8%;--d:17s;--dl:-6s"></i><i class="shoot" style="left:95%;top:26%;--d:29s;--dl:-21s"></i>`;
 
-  function buildFx(type){
+  function buildFx(type, light){
     let h = '';
     const n = (k, f) => { for (let i=0;i<k;i++) h += f(i); };
     switch(type){
@@ -403,17 +472,18 @@
       case 'stars':                                           // 맑은 밤: 별 + 별똥별
         h = starsHTML(55) + shootHTML(); break;
       case 'clouds':                                          // 구름 조금(낮)
-        h = cloudsHTML(5, .11, .16, 90, 150); break;
+        h = cloudsHTML(5, .75, .95, 80, 130, 26, 44, 'day'); break;
       case 'cloudsNight':                                     // 구름 조금(밤): 별 + 구름
-        h = starsHTML(25) + cloudsHTML(5, .08, .12, 90, 150); break;
+        h = starsHTML(25) + cloudsHTML(4, .22, .34, 90, 140, 26, 42, 'night'); break;
       case 'cloudsDense':                                     // 흐림
-        h = cloudsHTML(9, .10, .15, 110, 190); break;
+        h = light ? cloudsHTML(9, .55, .85, 90, 160, 32, 56, 'day') : cloudsHTML(9, .26, .42, 90, 160, 32, 56, 'grey'); break;
       case 'rain': case 'thunder':
-        n(55, () => `<i class="drop" style="left:${rnd(0,115)}%;--d:${rnd(.75,1.3).toFixed(2)}s;--dl:-${rnd(0,1.3).toFixed(2)}s"></i>`);
+        n(70, () => `<i class="drop" style="left:${rnd(0,115)}%;--d:${rnd(.7,1.2).toFixed(2)}s;--dl:-${rnd(0,1.2).toFixed(2)}s"></i>`);
         break;
       case 'snow':
-        n(40, () => { const s = rnd(3,6).toFixed(1);
-          return `<i class="flake" style="left:${rnd(0,100)}%;width:${s}px;height:${s}px;opacity:${rnd(.4,.9).toFixed(2)};--d:${rnd(9,17).toFixed(1)}s;--dl:-${rnd(0,17).toFixed(1)}s"></i>`; });
+        n(60, () => { const big = Math.random() < .35, s = (big ? rnd(20,34) : rnd(9,18)).toFixed(1);   // 함박눈: 큰 송이 35%
+          const d = big ? rnd(11,17) : rnd(9,14);
+          return `<i class="flake" style="left:${rnd(-3,100)}%;width:${s}px;height:${s}px;opacity:${(big ? rnd(.75,.95) : rnd(.6,.9)).toFixed(2)};--d:${d.toFixed(1)}s;--dl:-${rnd(0,d).toFixed(1)}s"></i>`; });
         break;
       case 'fog':
         n(4, i => `<i class="fogb" style="top:${10 + i*22}%;--d:${rnd(18,30).toFixed(0)}s;--dl:-${rnd(0,30).toFixed(0)}s"></i>`);
@@ -425,7 +495,8 @@
   function applyScene(d){
     if (!d || !d.current) return;
     const s = pickScene(d);
-    const id = s.key + (s.night ? '-n' : '');
+    const light = !s.night && DAY_BG[s.key] !== undefined;      // 낮 = 밝은 테마 (뇌우·노을 제외)
+    const id = s.key + (s.night ? '-n' : '') + (light ? '-l' : '');
     if (id === curScene) return;
     const first = curScene === null;
     curScene = id;
@@ -435,15 +506,16 @@
     const bg = $('bg');
     const layer = document.createElement('div');
     layer.className = 'bgl';
-    layer.style.background = sc.bg;
-    bg.insertBefore(layer, $('fx'));
+    layer.style.background = light ? DAY_BG[s.key] : sc.bg;
+    document.body.classList.toggle('light', light);
+    bg.insertBefore(layer, $('shade'));   // 밤 음영은 배경만 어둡게, 눈·비·별은 선명하게
     requestAnimationFrame(() => requestAnimationFrame(() => layer.classList.add('on')));
     const olds = [...bg.querySelectorAll('.bgl')].filter(e => e !== layer);
     setTimeout(() => olds.forEach(e => e.remove()), 3300);
     // 날씨 효과 교체
     const fx = $('fx');
     fx.style.opacity = 0;
-    setTimeout(() => { fx.innerHTML = buildFx(fxType); fx.style.opacity = 1; }, first ? 0 : 1500);
+    setTimeout(() => { fx.innerHTML = buildFx(fxType, light); fx.style.opacity = 1; }, first ? 0 : 1500);
     $('shade').style.opacity = (s.night && s.key !== 'partly') ? .35 : (s.night ? .2 : 0);
     $('flash').classList.toggle('on', s.key === 'thunder');
   }
@@ -532,6 +604,12 @@
       + `<span class="dm"><span class="dw">${DAYS[w]}요일</span><span class="dy">${t.getFullYear()}. ${pad(t.getMonth()+1)}</span></span></div>`;
   }
 
+  // 현재 날씨 시각요소: 아이콘 없음. 밤 + 맑음/구름 조금일 때만 실제 월령의 달 표시
+  function nowVisual(c){
+    const t = typeOf(c.weather_code);
+    return (c.is_day !== 1 && (t === 'clear' || t === 'partly')) ? moonSVG(moonPhase()) : '';
+  }
+
   function render(d, stale){
     const c = d.current;
     const hourNow = +c.time.slice(11,13);
@@ -544,7 +622,7 @@
     const html = `
       <div class="hdr">${dateHTML()}<div class="loc">${PIN}<span>${cfg.name}</span></div></div>
       <div class="now">
-        <div class="ic">${icon(c.weather_code, c.is_day === 1)}</div>
+        ${nowVisual(c)}
         <div>
           <div class="t">${Math.round(c.temperature_2m)}°</div>
           <div class="d">${desc(c.weather_code)} · 체감 ${Math.round(c.apparent_temperature)}°<br>
