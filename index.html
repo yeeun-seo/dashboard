@@ -73,11 +73,13 @@
   .moonic svg{width:100%;height:100%;overflow:visible}
   .moonic .halo{animation:halo 8s ease-in-out infinite;transform-origin:50% 50%}
   @keyframes halo{50%{opacity:.7;transform:scale(1.03)}}
-  /* 별똥별 */
-  .shoot{position:absolute;width:16vw;height:1.5px;
-    background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.85));
-    rotate:-24deg;opacity:0;animation:shoot var(--d) linear infinite;animation-delay:var(--dl)}
-  @keyframes shoot{0%{opacity:0;transform:translateX(0)}1%{opacity:.9}4%{opacity:0;transform:translateX(-28vw)}100%{opacity:0;transform:translateX(-28vw)}}
+  /* 별똥별: 빛나는 머리 + 긴 꼬리, 좌측 하단 방향으로 떨어짐 */
+  .shoot{position:absolute;width:24vw;height:2.6px;border-radius:2px;rotate:-30deg;opacity:0;
+    background:linear-gradient(270deg,rgba(255,255,255,0),rgba(214,230,255,.35) 55%,rgba(255,255,255,.95));
+    animation:shoot var(--d) linear infinite;animation-delay:var(--dl)}
+  .shoot::before{content:"";position:absolute;left:-3px;top:50%;width:7px;height:7px;margin-top:-3.5px;border-radius:50%;
+    background:#fff;box-shadow:0 0 10px 4px rgba(200,220,255,.85),0 0 22px 8px rgba(160,190,255,.35)}
+  @keyframes shoot{0%{opacity:0;transform:translateX(0)}1.5%{opacity:1}8%{opacity:0;transform:translateX(-36vw)}100%{opacity:0;transform:translateX(-36vw)}}
   body.paused *{animation-play-state:paused !important}
 
   /* ---------- 페이지 트랙 (스와이프) ---------- */
@@ -461,7 +463,9 @@
     const d = rnd(d1,d2), back = i % 2 === 0, w = back ? rnd(w1+8, w2+12) : rnd(w1, w2);
     const o = back ? rnd(o1,o2)*.65 : rnd(o1,o2);
     h += `<i class="cloud" style="--img:${cloudImg(i%3, tone).replace(/"/g,'&quot;')};top:${rnd(-10,55).toFixed(1)}%;--w:${w.toFixed(0)};--o:${o.toFixed(2)};--d:${(back ? d*1.5 : d).toFixed(0)}s;--dl:-${rnd(0,d).toFixed(0)}s"></i>`; } return h; };
-  const shootHTML = () => `<i class="shoot" style="left:70%;top:8%;--d:17s;--dl:-6s"></i><i class="shoot" style="left:95%;top:26%;--d:29s;--dl:-21s"></i>`;
+  // 별똥별: 현재 날씨가 있는 좌측 영역을 가로지르도록 시작점을 화면 왼쪽~중앙 위쪽에 배치 (주기를 서로 다르게)
+  const shootHTML = () => [[46,4,9,-2],[58,14,13,-8],[38,22,11,-5],[52,-2,16,-12]]
+    .map(([l,t,d,dl]) => `<i class="shoot" style="left:${l}%;top:${t}%;--d:${d}s;--dl:${dl}s"></i>`).join('');
 
   function buildFx(type, light){
     let h = '';
@@ -474,7 +478,7 @@
       case 'clouds':                                          // 구름 조금(낮)
         h = cloudsHTML(5, .75, .95, 80, 130, 26, 44, 'day'); break;
       case 'cloudsNight':                                     // 구름 조금(밤): 별 + 구름
-        h = starsHTML(25) + cloudsHTML(4, .22, .34, 90, 140, 26, 42, 'night'); break;
+        h = starsHTML(25) + shootHTML() + cloudsHTML(4, .22, .34, 90, 140, 26, 42, 'night'); break;
       case 'cloudsDense':                                     // 흐림
         h = light ? cloudsHTML(9, .55, .85, 90, 160, 32, 56, 'day') : cloudsHTML(9, .26, .42, 90, 160, 32, 56, 'grey'); break;
       case 'rain': case 'thunder':
